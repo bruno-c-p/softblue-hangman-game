@@ -1,5 +1,6 @@
 package br.com.brunocp.hangman.game;
 
+import br.com.brunocp.hangman.core.Config;
 import br.com.brunocp.hangman.core.Dictionary;
 import br.com.brunocp.hangman.core.Word;
 import br.com.brunocp.hangman.core.exception.InvalidCharacterException;
@@ -10,9 +11,7 @@ import java.util.Set;
 
 public class Game {
 
-    private static final int MAX_ERRORS = 5;
-
-    public void start() {
+    public void start(String[] args) {
 
         UI.print("Bem-Vindo ao Jogo da Forca!");
 
@@ -25,6 +24,14 @@ public class Game {
         Set<Character> usedChars = new HashSet<>();
 
         int errorCount = 0;
+
+        if (args.length > 0) {
+            Config.setMaxErrors(args[0]);
+        }
+
+        int maxErrors = Integer.parseInt(Config.get("maxErrors"));
+
+        UI.print("Você pode errar no máximo " + maxErrors + " vez(es)!");
 
         while (true) {
 
@@ -52,8 +59,8 @@ public class Game {
 
                     errorCount++;
 
-                    if (errorCount < MAX_ERRORS) {
-                        UI.print("Você errou! Ainda pode errar " + (MAX_ERRORS - errorCount) + " vez(es).");
+                    if (errorCount < maxErrors) {
+                        UI.print("Você errou! Ainda pode errar " + (maxErrors - errorCount) + " vez(es).");
                     }
                 }
 
@@ -66,7 +73,7 @@ public class Game {
                     break;
                 }
 
-                if (errorCount == MAX_ERRORS) {
+                if (errorCount == maxErrors) {
 
                     UI.print("Você PERDEU o jogo! A palavra correta era: " + word.getOriginalWord());
                     UI.print("FIM DO JOGO!");
